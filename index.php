@@ -22,10 +22,11 @@ $mahasiswa = getMahasiswa();
 </head>
 <body class="container py-4">
     <h2>Welcome, <?php echo ($_SESSION["user"]["username"]); ?></h2>
-
+    
     <form method="POST" action="server.php?action=logout">
         <button type="submit" class="btn btn-danger mb-4">Logout</button>
     </form>
+    <button type="button" class="my-3" id="darkModeToggle">Dark Mode</button>
 
     <h3>Tambah Data Mahasiswa</h3>
     <form method="POST" action="server.php?action=addMahasiswa" enctype="multipart/form-data" class="mb-4">
@@ -59,7 +60,6 @@ $mahasiswa = getMahasiswa();
         </div>
         <button type="submit" class="btn btn-primary">Tambah</button>
     </form>
-    <button id="darkModeToggle">Toggle Dark Mode</button>
     <h3>Data Mahasiswa</h3>
     <table class="table table-bordered">
         <thead>
