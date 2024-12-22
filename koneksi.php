@@ -1,14 +1,15 @@
 <?php
 class Koneksi {
-    private $host = '127.0.0.1'; // Host database
+    private $host = 'junction.proxy.rlwy.net'; // Host database
     private $user = 'root'; // User default MySQL di XAMPP
-    private $password = ''; // Default password kosong di XAMPP
-    private $dbname = 'uasweb'; // Nama database sesuai dengan yang telah Anda buat
+    private $password = 'COzArnuNlbNVBYvsXUUyGrggGRZxMmlH'; // Default password kosong di XAMPP
+    private $dbname = 'railway'; // Nama database sesuai dengan yang telah Anda buat
+    private $port = 54932;
     private $conn;
 
     // Constructor untuk membuka koneksi
     public function __construct() {
-        $this->conn = new mysqli($this->host, $this->user, $this->password, $this->dbname);
+        $this->conn = new mysqli($this->host, $this->user, $this->password, $this->dbname, $this->port);
 
         // Periksa koneksi, tampilkan pesan error jika gagal
         if ($this->conn->connect_error) {

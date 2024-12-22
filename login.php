@@ -1,3 +1,17 @@
+<?php
+// Start the session
+session_start();
+
+// Example of setting the error message
+// $_SESSION["error"] = "Invalid username or password.";
+
+// Check if an error exists and store it in a variable
+$error = isset($_SESSION["error"]) ? $_SESSION["error"] : null;
+
+// Clear the error after displaying it
+unset($_SESSION["error"]);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +23,9 @@
 </head>
 <body class="container py-4">
     <h2>Login</h2>
-
-    <!-- Menampilkan pesan kesalahan jika ada -->
-    <?php if (isset($_GET['error'])): ?>
+    <?php if ($error): ?>
         <div class="alert alert-danger" role="alert">
-            <?php echo htmlspecialchars($_GET['error']); ?>
+            <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
         </div>
     <?php endif; ?>
 
@@ -29,7 +41,9 @@
         <div id="passwordError" class="text-danger" style="display: none;">Password is required.</div>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
-    <a href="register.php" class="btn btn-secondary">Register</a>
+    <p class="text-center mt-3">
+                Don't have an account? <a href="register.php">Register</a>
+    </p>
 </form>
 
     <script>

@@ -1,3 +1,17 @@
+<?php
+// Start the session
+session_start();
+
+// Example of setting the error message
+// $_SESSION["error"] = "Invalid username or password.";
+
+// Check if an error exists and store it in a variable
+$error = isset($_SESSION["error"]) ? $_SESSION["error"] : null;
+
+// Clear the error after displaying it
+unset($_SESSION["error"]);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +28,11 @@
 </head>
 <body class="container py-4">
     <h2>Register</h2>
+    <?php if ($error): ?>
+        <div class="alert alert-danger" role="alert">
+            <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
+        </div>
+    <?php endif; ?>
 
     <!-- Display server-side error or success messages -->
     <?php if (isset($_GET['error'])): ?>
@@ -53,7 +72,9 @@
             <div id="termsError" class="text-danger">You must agree to the terms of service.</div>
         </div>
         <button type="submit" class="btn btn-primary">Register</button>
-        <a href="login.php" class="btn btn-secondary">Login</a>
+        <p class="text-center mt-3">
+                Already have an account? <a href="login.php">Log In</a>
+        </p>
     </form>
     <script>
         function validateForm() {

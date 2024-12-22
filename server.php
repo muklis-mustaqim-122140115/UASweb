@@ -4,25 +4,35 @@ session_start();
 
 // Fungsi Register
 function registerUser($username, $email, $password) {
-    $conn = (new Koneksi())->getConnection();
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    try {
+        $conn = (new Koneksi())->getConnection();
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-    $params = [$username, $email, $hashedPassword];
-    $types = "sss"; // 3 string (username, email, password)
+        $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+        $params = [$username, $email, $hashedPassword];
+        $types = "sss"; // 3 string (username, email, password)
 
-    $stmt = $conn->prepare($sql);
-    if ($stmt === false) {
-        die("Error preparing statement: " . $conn->error);
+        $stmt = $conn->prepare($sql);
+        if ($stmt === false) {
+            $_SESSION["error"] = "Error preparing statement: " . $conn->error;
+            header("Location: register.php");
+            exit;
+        }
+        $stmt->bind_param($types, ...$params);
+        if ($stmt->execute()) {
+            header("Location: index.php");
+        } else {
+            $_SESSION["error"] = "Error executing query: " . $stmt->error;
+            header("Location: login.php");
+            exit;
+        }
+        $stmt->close();
+        $conn->close();
+    } catch (Exception $e) {
+        $_SESSION["error"] = $e->getMessage();
+        header("Location: register.php");
+        exit;
     }
-    $stmt->bind_param($types, ...$params);
-    if ($stmt->execute()) {
-        header("Location: index.php");
-    } else {
-        die("Error executing query: " . $stmt->error);
-    }
-    $stmt->close();
-    $conn->close();
 }
 
 // Fungsi Login
@@ -35,7 +45,9 @@ function loginUser($username, $password) {
 
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
-        die("Error preparing statement: " . $conn->error);
+        $_SESSION["error"] = "Error preparing statement: " . $conn->error;
+        header("Location: login.php");
+        exit;
     }
     $stmt->bind_param($types, ...$params);
     if ($stmt->execute()) {
@@ -49,13 +61,19 @@ function loginUser($username, $password) {
                 header("Location: index.php");
                 exit;
             } else {
-                die("Invalid password.");
+                $_SESSION["error"] = "Invalid Password";
+                header("Location: login.php");
+                exit;
             }
         } else {
-            die("User not found.");
+            $_SESSION["error"] = "User not found.";
+            header("Location: login.php");
+            exit;
         }
     } else {
-        die("Error executing query: " . $stmt->error);
+        $_SESSION["error"] = "Error executing query: " . $stmt->error;
+        header("Location: login.php");
+        exit;
     }
     $stmt->close();
     $conn->close();
