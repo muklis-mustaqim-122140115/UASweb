@@ -79,32 +79,164 @@ function getMahasiswa() {
     return $data;
 }
 
+// Fungsi untuk Menambahkan Data Mahasiswa
+function addMahasiswa($nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian, $gambar) {
+    $conn = (new Koneksi())->getConnection();
+
+    // Upload file gambar
+    $gambarPath = uploadGambar($gambar);
+
+    $sql = "INSERT INTO tblMahasiswa (mahasiswa_nim, mahasiswa_nama, mahasiswa_prodi, mahasiswa_tanggal_lahir, mahasiswa_tempat_tinggal, mahasiswa_keahlian, mahasiswa_gambar) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $params = [$nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian, $gambarPath];
+    $types = "sssssss";
+
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Error preparing statement: " . $conn->error);
+    }
+    $stmt->bind_param($types, ...$params);
+    if ($stmt->execute()) {
+        header("Location: index.php");
+        exit;
+    } else {
+        die("Error executing query: " . $stmt->error);
+    }
+    $stmt->close();
+    $conn->close();
+}
+
+// Fungsi untuk Mengedit Data Mahasiswa
+function editMahasiswa($id, $nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian, $gambar) {
+    $conn = (new Koneksi())->getConnection();
+
+    // Jika ada gambar baru diunggah, upload file gambar dan dapatkan path-nya
+    $gambarPath = null;
+    if ($gambar && $gambar['error'] === UPLOAD_ERR_OK) {
+        $gambarPath = uploadGambar($gambar);
+    }
+
+    $sql = "UPDATE tblMahasiswa SET mahasiswa_nim = ?, mahasiswa_nama = ?, mahasiswa_prodi = ?, mahasiswa_tanggal_lahir = ?, mahasiswa_tempat_tinggal = ?, mahasiswa_keahlian = ?";
+    $params = [$nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian];
+    $types = "ssssss";
+
+    if ($gambarPath) {
+        $sql .= ", mahasiswa_gambar = ?";
+        $params[] = $gambarPath;
+        $types .= "s";
+    }
+
+    $sql .= " WHERE id = ?";
+    $params[] = $id;
+    $types .= "i";
+
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+        die("Error preparing statement: " . $conn->error);
+    }
+    $stmt->bind_param($types, ...$params);
+    if ($stmt->execute()) {
+        header("Location: index.php");
+        exit;
+    } else {
+        die("Error executing query: " . $stmt->error);
+    }
+    $stmt->close();
+    $conn->close();
+}
+
+// Fungsi untuk Menghapus Data Mahasiswa
+function deleteMahasiswa($id) {
+    $conn = (new Koneksi())->getConnection();
+
+    $sql = "DELETE FROM tblMahasiswa WHERE id = ?";
+    $params = [$id];
+    $types = "i";
+    
+    $stmt = $conn->prepare($sql);
+    echo $stmt->execute($params);
+    if ($stmt === false) {
+        die("Error preparing statement: " . $conn->error);
+    }
+    $stmt->bind_param($types, ...$params);
+    if ($stmt->execute()) {
+        header("Location: index.php");
+        exit;
+    } else {
+        die("Error executing query: " . $stmt->error);
+    }
+    $stmt->close();
+    $conn->close();
+}
+
+// Fungsi untuk Upload Gambar
+function uploadGambar($gambar) {
+    $uploadDir = 'uploads/';
+    // Pastikan folder uploads ada
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+    $fileName = basename($gambar['name']);
+    $targetPath = $uploadDir . uniqid() . "_" . $fileName;
+
+    if (!move_uploaded_file($gambar['tmp_name'], $targetPath)) {
+        die("Error uploading file.");
+    }
+    return $targetPath;
+}
+
 // Proses berdasarkan REQUEST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $action = $_GET['action'];
+    $action = $_GET['action'];
 
-        switch ($action) {
-            case 'registerUser':
-                $username = trim($_POST['username']);
-                $email = trim($_POST['email']);
-                $password = trim($_POST['password']);
-                registerUser($username, $email, $password);
-                break;
+    switch ($action) {
+        case 'registerUser':
+            $username = trim($_POST['username']);
+            $email = trim($_POST['email']);
+            $password = trim($_POST['password']);
+            registerUser($username, $email, $password);
+            break;
 
-            case 'login':
-                $username = trim($_POST['username']);
-                $password = trim($_POST['password']);
-                loginUser($username, $password);
-                break;
+        case 'login':
+            $username = trim($_POST['username']);
+            $password = trim($_POST['password']);
+            loginUser($username, $password);
+            break;
 
-            case 'logout':
-                session_unset(); 
-                session_destroy();
-                header("Location: login.php");
-                break;
+        case 'logout':
+            session_unset();
+            session_destroy();
+            header("Location: login.php");
+            break;
 
-            default:
-                die("Unknown action: $action");
-        }
+        case 'addMahasiswa':
+            $nim = trim($_POST['nim']);
+            $nama = trim($_POST['nama']);
+            $prodi = trim($_POST['prodi']);
+            $tanggal_lahir = trim($_POST['tanggal_lahir']);
+            $tempat_tinggal = trim($_POST['tempat_tinggal']);
+            $keahlian = trim($_POST['keahlian']);
+            $gambar = $_FILES['gambar'];
+            addMahasiswa($nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian, $gambar);
+            break;
+
+        case 'editMahasiswa':
+            $id = trim($_POST['id']);
+            $nim = trim($_POST['nim']);
+            $nama = trim($_POST['nama']);
+            $prodi = trim($_POST['prodi']);
+            $tanggal_lahir = trim($_POST['tanggal_lahir']);
+            $tempat_tinggal = trim($_POST['tempat_tinggal']);
+            $keahlian = trim($_POST['keahlian']);
+            $gambar = isset($_FILES['gambar']) ? $_FILES['gambar'] : null;
+            editMahasiswa($id, $nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian, $gambar);
+            break;
+
+        case 'deleteMahasiswa':
+            $id = trim($_GET['id']);
+            deleteMahasiswa($id);
+            break;
+
+        default:
+            die("Unknown action: $action");
     }
-?>
+}
