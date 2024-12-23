@@ -98,15 +98,15 @@ function getMahasiswa() {
 }
 
 // Fungsi untuk Menambahkan Data Mahasiswa
-function addMahasiswa($nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian, $gambar) {
+function addMahasiswa($nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian) {
     $conn = (new Koneksi())->getConnection();
 
     // Upload file gambar
-    $gambarPath = uploadGambar($gambar);
+    // $gambarPath = uploadGambar($gambar);
 
-    $sql = "INSERT INTO tblMahasiswa (mahasiswa_nim, mahasiswa_nama, mahasiswa_prodi, mahasiswa_tanggal_lahir, mahasiswa_tempat_tinggal, mahasiswa_keahlian, mahasiswa_gambar) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    $params = [$nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian, $gambarPath];
-    $types = "sssssss";
+    $sql = "INSERT INTO tblMahasiswa (mahasiswa_nim, mahasiswa_nama, mahasiswa_prodi, mahasiswa_tanggal_lahir, mahasiswa_tempat_tinggal, mahasiswa_keahlian) VALUES (?, ?, ?, ?, ?, ?)";
+    $params = [$nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian];
+    $types = "ssssss";
 
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
@@ -124,24 +124,24 @@ function addMahasiswa($nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $kea
 }
 
 // Fungsi untuk Mengedit Data Mahasiswa
-function editMahasiswa($id, $nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian, $gambar) {
+function editMahasiswa($id, $nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian) {
     $conn = (new Koneksi())->getConnection();
 
     // Jika ada gambar baru diunggah, upload file gambar dan dapatkan path-nya
-    $gambarPath = null;
-    if ($gambar && $gambar['error'] === UPLOAD_ERR_OK) {
-        $gambarPath = uploadGambar($gambar);
-    }
+    // $gambarPath = null;
+    // if ($gambar && $gambar['error'] === UPLOAD_ERR_OK) {
+    //     $gambarPath = uploadGambar($gambar);
+    // }
 
     $sql = "UPDATE tblMahasiswa SET mahasiswa_nim = ?, mahasiswa_nama = ?, mahasiswa_prodi = ?, mahasiswa_tanggal_lahir = ?, mahasiswa_tempat_tinggal = ?, mahasiswa_keahlian = ?";
     $params = [$nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian];
     $types = "ssssss";
 
-    if ($gambarPath) {
-        $sql .= ", mahasiswa_gambar = ?";
-        $params[] = $gambarPath;
-        $types .= "s";
-    }
+    // if ($gambarPath) {
+    //     $sql .= ", mahasiswa_gambar = ?";
+    //     $params[] = $gambarPath;
+    //     $types .= "s";
+    // }
 
     $sql .= " WHERE id = ?";
     $params[] = $id;
@@ -187,20 +187,20 @@ function deleteMahasiswa($id) {
 }
 
 // Fungsi untuk Upload Gambar
-function uploadGambar($gambar) {
-    $uploadDir = 'uploads/';
-    // Pastikan folder uploads ada
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true);
-    }
-    $fileName = basename($gambar['name']);
-    $targetPath = $uploadDir . uniqid() . "_" . $fileName;
+// function uploadGambar($gambar) {
+//     $uploadDir = 'uploads/';
+//     // Pastikan folder uploads ada
+//     if (!is_dir($uploadDir)) {
+//         mkdir($uploadDir, 0777, true);
+//     }
+//     $fileName = basename($gambar['name']);
+//     $targetPath = $uploadDir . uniqid() . "_" . $fileName;
 
-    if (!move_uploaded_file($gambar['tmp_name'], $targetPath)) {
-        die("Error uploading file.");
-    }
-    return $targetPath;
-}
+//     if (!move_uploaded_file($gambar['tmp_name'], $targetPath)) {
+//         die("Error uploading file.");
+//     }
+//     return $targetPath;
+// }
 
 // Proses berdasarkan REQUEST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -233,8 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $tanggal_lahir = trim($_POST['tanggal_lahir']);
             $tempat_tinggal = trim($_POST['tempat_tinggal']);
             $keahlian = trim($_POST['keahlian']);
-            $gambar = $_FILES['gambar'];
-            addMahasiswa($nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian, $gambar);
+            addMahasiswa($nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian);
             break;
 
         case 'editMahasiswa':
@@ -245,8 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $tanggal_lahir = trim($_POST['tanggal_lahir']);
             $tempat_tinggal = trim($_POST['tempat_tinggal']);
             $keahlian = trim($_POST['keahlian']);
-            $gambar = isset($_FILES['gambar']) ? $_FILES['gambar'] : null;
-            editMahasiswa($id, $nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian, $gambar);
+            editMahasiswa($id, $nim, $nama, $prodi, $tanggal_lahir, $tempat_tinggal, $keahlian);
             break;
 
         case 'deleteMahasiswa':

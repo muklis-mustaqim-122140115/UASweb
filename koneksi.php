@@ -2,9 +2,9 @@
 class Koneksi {
     private $host = 'junction.proxy.rlwy.net'; // Host database
     private $user = 'root'; // User default MySQL di XAMPP
-    private $password = 'COzArnuNlbNVBYvsXUUyGrggGRZxMmlH'; // Default password kosong di XAMPP
+    private $password = 'thZULOAVLTdFJKCJrIoRCqmeSgWNmgvF'; // Default password kosong di XAMPP
     private $dbname = 'railway'; // Nama database sesuai dengan yang telah Anda buat
-    private $port = 54932;
+    private $port = 48180;
     private $conn;
 
     // Constructor untuk membuka koneksi

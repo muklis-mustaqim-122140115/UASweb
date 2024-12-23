@@ -37,7 +37,7 @@ $mahasiswa = getMahasiswa(); // Memanggil fungsi dari server.php untuk mendapatk
     <!-- Form untuk menambahkan data mahasiswa -->
     <h3>Tambah Data Mahasiswa</h3>
     <form method="POST" action="server.php?action=addMahasiswa" enctype="multipart/form-data" class="mb-4">
-         <!-- Semua yang dibawah ini untuk menginputkan Nim, Nama, Prodi, Tempat tanggal lahir, Tempat tinggal, Keahlian dan gambar -->
+         <!-- Semua yang dibawah ini untuk menginputkan Nim, Nama, Prodi, Tempat tanggal lahir, Tempat tinggal, Keahlian -->
         <div class="mb-3">
             <label for="nim" class="form-label">NIM</label>
             <input type="text" name="nim" id="nim" class="form-control" required>
@@ -62,10 +62,6 @@ $mahasiswa = getMahasiswa(); // Memanggil fungsi dari server.php untuk mendapatk
             <label for="keahlian" class="form-label">Keahlian</label>
             <input type="text" name="keahlian" id="keahlian" class="form-control" required>
         </div>
-        <div class="mb-3">
-            <label for="gambar" class="form-label">Upload Gambar</label>
-            <input type="file" name="gambar" id="gambar" class="form-control" accept="image/*" required>
-        </div>
         <button type="submit" class="btn btn-primary">Tambah</button> <!-- Tombol submit form -->
     </form>
 
@@ -81,7 +77,6 @@ $mahasiswa = getMahasiswa(); // Memanggil fungsi dari server.php untuk mendapatk
                 <th>Tanggal Lahir</th>
                 <th>Tempat Tinggal</th>
                 <th>Keahlian</th>
-                <th>Gambar</th>
                 <th>Keterangan</th>
             </tr>
         </thead>
@@ -97,7 +92,6 @@ $mahasiswa = getMahasiswa(); // Memanggil fungsi dari server.php untuk mendapatk
                     echo "<td>" . htmlspecialchars($row['mahasiswa_tanggal_lahir']) . "</td>"; // Menampilkan Tanggal Lahir.
                     echo "<td>" . htmlspecialchars($row['mahasiswa_tempat_tinggal']) . "</td>"; // Menampilkan Tempat Tinggal.
                     echo "<td>" . htmlspecialchars($row['mahasiswa_keahlian']) . "</td>"; // Menampilkan Keahlian.
-                    echo "<td><img src='" . htmlspecialchars($row['mahasiswa_gambar']) . "' alt='Gambar Mahasiswa' class='img-thumbnail' style='width: 100px;'></td>"; // Menampilkan Gambar.
                     echo "<td>";
                     // Tombol Edit dan Hapus
                     echo "<form style='all: unset;' class='d-flex justify-content-center' action='server.php?action=deleteMahasiswa&id=" . $row['id'] . "' method='post' onsubmit='return confirm(\"Apakah Anda yakin ingin menghapus data ini?\");'>";
@@ -141,10 +135,6 @@ $mahasiswa = getMahasiswa(); // Memanggil fungsi dari server.php untuk mendapatk
                     echo "          <div class='mb-3'>";
                     echo "            <label for='keahlian' class='form-label'>Keahlian</label>";
                     echo "            <input type='text' name='keahlian' id='keahlian' class='form-control' value='" . htmlspecialchars($row['mahasiswa_keahlian']) . "' required>";
-                    echo "          </div>";
-                    echo "          <div class='mb-3'>";
-                    echo "            <label for='gambar' class='form-label'>Upload Gambar Baru</label>";
-                    echo "            <input type='file' name='gambar' id='gambar' class='form-control' accept='image/*'>";
                     echo "          </div>";
 
                     // ... input lainnya untuk edit data mahasiswa.
