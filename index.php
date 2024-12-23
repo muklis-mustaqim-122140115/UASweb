@@ -30,6 +30,9 @@ $mahasiswa = getMahasiswa(); // Memanggil fungsi dari server.php untuk mendapatk
 
     <!-- Tombol toggle untuk dark mode -->
     <button type="button" class="my-3" id="darkModeToggle">Dark Mode</button>
+    <button type="button" class="my-3">
+    <a href="harian.html" style="text-decoration: none;color: black;">Harian</a>
+    </button>
 
     <!-- Form untuk menambahkan data mahasiswa -->
     <h3>Tambah Data Mahasiswa</h3>
@@ -79,7 +82,7 @@ $mahasiswa = getMahasiswa(); // Memanggil fungsi dari server.php untuk mendapatk
                 <th>Tempat Tinggal</th>
                 <th>Keahlian</th>
                 <th>Gambar</th>
-                <th>Aksi</th>
+                <th>Keterangan</th>
             </tr>
         </thead>
         <tbody>

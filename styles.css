@@ -193,7 +193,7 @@ table tr:hover {
 
 /* Dark mode styles */
 .dark-mode {
-    background-color: #121212;
+    background-color: #121212 !important;
     color: #e4e4e4;
     transition: background-color 0.3s, color 0.3s;
 }
@@ -213,8 +213,7 @@ table tr:hover {
 }
 
 .dark-mode .form-control {
-    background-color: #2a2a2a;
-    color: #ffffff;
+    color: #000000;
     border-color: #444;
 }
 
@@ -248,4 +247,42 @@ table tr:hover {
 
 .dark-mode .btn-primary:hover {
     background-color: #3399ff;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    h1, h2, h3 {
+        font-size: 1.5rem;
+        padding-bottom: 5px;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    form .form-control {
+        padding: 8px;
+    }
+
+    form button {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+
+    table th, table td {
+        padding: 10px;
+    }
+
+    .btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
+    }
 }
