@@ -1,15 +1,15 @@
 <?php
 // Start the session
-session_start();
+session_start(); // Memulai sesi untuk menyimpan data pengguna sementara selama sesi aktif.
 
 // Example of setting the error message
-// $_SESSION["error"] = "Invalid username or password.";
+// $_SESSION["error"] = "Invalid username or password."; // Contoh bagaimana error message disimpan ke dalam sesi (jika ada).
 
 // Check if an error exists and store it in a variable
-$error = isset($_SESSION["error"]) ? $_SESSION["error"] : null;
+$error = isset($_SESSION["error"]) ? $_SESSION["error"] : null; // Mengecek apakah terdapat pesan error di sesi, jika ada simpan dalam variabel $error.
 
 // Clear the error after displaying it
-unset($_SESSION["error"]);
+unset($_SESSION["error"]); // Menghapus pesan error dari sesi setelah disimpan di variabel $error untuk mencegah tampil terus-menerus.
 ?>
 
 <!DOCTYPE html>
@@ -18,23 +18,25 @@ unset($_SESSION["error"]);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Menghubungkan file CSS eksternal untuk styling -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"> <!-- Menggunakan Bootstrap untuk styling responsif -->
     <style>
         .text-danger {
-            display: none;
+            display: none; /* Default sembunyikan pesan error menggunakan CSS */
         }
     </style>
 </head>
 <body class="container py-4">
     <h2>Register</h2>
+
+    <!-- Tampilkan pesan error dari sesi jika ada -->
     <?php if ($error): ?>
         <div class="alert alert-danger" role="alert">
-            <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
+            <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?> <!-- Menghindari XSS dengan htmlspecialchars -->
         </div>
     <?php endif; ?>
 
-    <!-- Display server-side error or success messages -->
+    <!-- Tampilkan pesan error atau sukses dari URL jika ada -->
     <?php if (isset($_GET['error'])): ?>
         <div class="alert alert-danger" role="alert">
             <?php echo htmlspecialchars($_GET['error']); ?>
@@ -45,6 +47,7 @@ unset($_SESSION["error"]);
         </div>
     <?php endif; ?>
 
+    <!-- Form pendaftaran -->
     <form onsubmit="return validateForm();" method="post" action="server.php?action=registerUser">
         <div class="mb-3">
             <label for="username" class="form-label">Username:</label>
@@ -76,62 +79,64 @@ unset($_SESSION["error"]);
                 Already have an account? <a href="login.php">Log In</a>
         </p>
     </form>
+
+    <!-- JavaScript untuk validasi form -->
     <script>
         function validateForm() {
-            let isValid = true;
-            // Get form values
+            let isValid = true; // Flag untuk status validasi
+            // Ambil elemen input
             const username = document.getElementById('username');
             const email = document.getElementById('email');
             const password = document.getElementById('password');
             const passwordAgain = document.getElementById('passwordAgain');
             const terms = document.getElementById('terms');
 
-            // Get error elements
+            // Ambil elemen error
             const usernameError = document.getElementById('usernameError');
             const emailError = document.getElementById('emailError');
             const passwordError = document.getElementById('passwordError');
             const passwordAgainError = document.getElementById('passwordAgainError');
             const termsError = document.getElementById('termsError');
 
-            // Reset error messages
+            // Reset pesan error
             usernameError.style.display = 'none';
             emailError.style.display = 'none';
             passwordError.style.display = 'none';
             passwordAgainError.style.display = 'none';
             termsError.style.display = 'none';
 
-            // Username validation
-            if (username.value.trim() === '') {
-                usernameError.style.display = 'block';
+            // Validasi username
+            if (username.value.trim() === '') { // Jika username kosong
+                usernameError.style.display = 'block'; 
                 isValid = false;
             }
 
-            // Email validation
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (email.value.trim() === '' || !emailPattern.test(email.value)) {
+            // Validasi email
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Pola email valid
+            if (email.value.trim() === '' || !emailPattern.test(email.value)) { // Jika email kosong atau tidak valid
                 emailError.style.display = 'block';
                 isValid = false;
             }
 
-            // Password validation
-            if (password.value.trim() === '') {
+            // Validasi password
+            if (password.value.trim() === '') { // Jika password kosong
                 passwordError.style.display = 'block';
                 isValid = false;
             }
 
-            // Confirm password validation
-            if (passwordAgain.value.trim() === '' || password.value !== passwordAgain.value) {
+            // Validasi konfirmasi password
+            if (passwordAgain.value.trim() === '' || password.value !== passwordAgain.value) { // Jika password konfirmasi tidak cocok
                 passwordAgainError.style.display = 'block';
                 isValid = false;
             }
 
-            // Terms validation
-            if (!terms.checked) {
+            // Validasi checkbox syarat layanan
+            if (!terms.checked) { // Jika checkbox tidak dicentang
                 termsError.style.display = 'block';
                 isValid = false;
             }
 
-            return isValid;
+            return isValid; // Kembalikan status validasi
         }
     </script>
 </body>

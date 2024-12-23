@@ -1,15 +1,15 @@
 <?php
 // Start the session
-session_start();
+session_start(); // Memulai sesi untuk menyimpan data pengguna sementara selama sesi aktif.
 
-// Example of setting the error message
-// $_SESSION["error"] = "Invalid username or password.";
+// Contoh pengaturan pesan kesalahan
+// $_SESSION["error"] = "Invalid username or password."; // Contoh bagaimana error message disimpan ke dalam sesi (jika ada).
 
-// Check if an error exists and store it in a variable
-$error = isset($_SESSION["error"]) ? $_SESSION["error"] : null;
+// Periksa apakah ada eror dan simpan dalam variabel
+$error = isset($_SESSION["error"]) ? $_SESSION["error"] : null; // Mengecek apakah terdapat pesan error di sesi, jika ada simpan dalam variabel $error.
 
-// Clear the error after displaying it
-unset($_SESSION["error"]);
+// Hapus eror setelah menampilkannya
+unset($_SESSION["error"]); // Menghapus pesan error dari sesi setelah disimpan di variabel $error untuk mencegah tampil terus-menerus.
 ?>
 
 <!DOCTYPE html>
@@ -18,66 +18,71 @@ unset($_SESSION["error"]);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Menghubungkan file CSS eksternal untuk styling -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"> <!-- Bootstrap untuk styling responsif -->
 </head>
-<body class="container py-4">
+<body class="container py-4"> <!-- Menggunakan Bootstrap untuk memberikan padding dan styling -->
     <h2>Login</h2>
+
+    <!-- Menampilkan pesan error jika ada -->
     <?php if ($error): ?>
         <div class="alert alert-danger" role="alert">
-            <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
+            <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?> <!-- Menampilkan pesan error dengan menghindari karakter berbahaya (XSS). -->
         </div>
     <?php endif; ?>
 
+    <!-- Form login dan masukkan password , semuanya terhubung dengan action pada server.php-->
     <form id="loginForm" method="post" action="server.php?action=login">
     <div class="mb-3">
         <label for="username" class="form-label">Username:</label>
         <input type="text" id="username" name="username" class="form-control">
-        <div id="usernameError" class="text-danger" style="display: none;">Username is required.</div>
+        <div id="usernameError" class="text-danger" style="display: none;">Username is required.</div> <!-- Pesan error jika username kosong -->
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Password:</label>
         <input type="password" id="password" name="password" class="form-control">
-        <div id="passwordError" class="text-danger" style="display: none;">Password is required.</div>
+        <div id="passwordError" class="text-danger" style="display: none;">Password is required.</div> <!-- Pesan error jika password kosong -->
     </div>
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="submit" class="btn btn-primary">Login</button> <!-- Tombol login -->
+
+    <!-- Link ke halaman register -->
     <p class="text-center mt-3">
-                Don't have an account? <a href="register.php">Register</a>
+                Don't have an account? <a href="register.php">Register</a> <!-- Link untuk mendaftar jika belum punya akun -->
     </p>
 </form>
 
-    <script>
-    // JavaScript validation
+    <script>//JavaScript untuk validasi form
+    // Menambahkan event listener pada form saat disubmit
     document.getElementById('loginForm').addEventListener('submit', function(event) {
-        let isValid = true;
+        let isValid = true; // Flag untuk validasi
 
-        // Get the form inputs
+        // Mengambil elemen input form
         const username = document.getElementById('username');
         const password = document.getElementById('password');
 
-        // Error elements
+        // Mengambil elemen error
         const usernameError = document.getElementById('usernameError');
         const passwordError = document.getElementById('passwordError');
 
-        // Reset error messages
+        // Reset pesan error
         usernameError.style.display = 'none';
         passwordError.style.display = 'none';
 
-        // Validate username
+        // Validasi username
         if (username.value.trim() === '') {
             usernameError.style.display = 'block';
             isValid = false;
         }
 
-        // Validate password
+        // Validasi password
         if (password.value.trim() === '') {
             passwordError.style.display = 'block';
             isValid = false;
         }
 
-        // Prevent form submission if invalid
+        // Mencegah pengiriman form jika validasi gagal
         if (!isValid) {
-            event.preventDefault();
+            event.preventDefault(); // Mencegah aksi submit form
         }
     });
 </script>
